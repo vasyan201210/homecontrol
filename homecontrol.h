@@ -1,11 +1,19 @@
 int LedPin = 12;        //  Подключаем светодиод к порту 13
+int relay = 8;
+int RelayPin = 8;        //  Реле
 int ButPin = 10;        //  Подключаем кнопку к выходу 10
 int LedVal = LOW;       //  устанавливаем начальное состояние светодиода
 int count = 0;          //  Количество секунд
 int delay_count = 0;      //  Счетчик адержки
 int lightValue = 0;
 
-void setup(){
+
+
+
+
+
+void setup(){ 
+  pinMode(relay, OUTPUT);  
   Serial.begin(9600);
   pinMode(ButPin, INPUT);
 }
@@ -49,7 +57,9 @@ void check() {
   if (lightValue)
   {
     digitalWrite(LedPin, HIGH);
+    digitalWrite(relay, LOW);
   } else {
     digitalWrite(LedPin, LOW);
+    digitalWrite(relay, HIGH);
   }
 }
