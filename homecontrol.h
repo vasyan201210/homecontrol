@@ -1,11 +1,12 @@
 int LedPin = 12;        //  Подключаем светодиод к порту 13
-int relay = 8;
-int RelayPin = 8;        //  Реле
+int relay1 = 8;         //  Реле1
+int relay2 = 9;        //  Реле2
 int ButPin = 10;        //  Подключаем кнопку к выходу 10
 int LedVal = LOW;       //  устанавливаем начальное состояние светодиода
 int count = 0;          //  Количество секунд
 int delay_count = 0;      //  Счетчик адержки
 int lightValue = 0;
+int testValue = 0; 
 
 
 
@@ -13,7 +14,8 @@ int lightValue = 0;
 
 
 void setup(){ 
-  pinMode(relay, OUTPUT);  
+  pinMode(relay1, OUTPUT);
+  pinMode(relay2, OUTPUT);  
   Serial.begin(9600);
   pinMode(ButPin, INPUT);
 }
@@ -49,6 +51,7 @@ void action(int count) {
     lightValue = !lightValue;
     Serial.println("Invert Ligth Value");
   }else{
+    testValue = !testValue;
     Serial.println("Invert Zanaveska Value");
   }
 }
@@ -57,9 +60,16 @@ void check() {
   if (lightValue)
   {
     digitalWrite(LedPin, HIGH);
-    digitalWrite(relay, LOW);
+    digitalWrite(relay1, LOW);
   } else {
     digitalWrite(LedPin, LOW);
-    digitalWrite(relay, HIGH);
+    digitalWrite(relay1, HIGH);
+  }
+
+    if (testValue)
+  {
+    digitalWrite(relay2, LOW);
+  } else {
+    digitalWrite(relay2, HIGH);
   }
 }
