@@ -1,15 +1,14 @@
-int motorPin1     = 1;        // Pin мотора 1
-int motorPin2     = 2;        // Pin мотора 2
-int motorPin3     = 3;        // Pin мотора 3
-int motorPin4     = 4;        // Pin мотора 4
-int relay1        = 8;        // Реле1
-int relay2        = 9;        // Реле2
-int ButPin        = 10;       // Подключаем кнопку к выходу 10
-int LedPin        = 12;       // Подключаем светодиод к порту 13
+int motorPin1     = 8;        // Pin мотора 1
+int motorPin2     = 7;        // Pin мотора 2
+int motorPin3     = 4;        // Pin мотора 3
+int motorPin4     = 2;        // Pin мотора 4
+int relay1        = 9;       // Реле1
+int relay2        = 10;        // Реле2
+int ButPin        = 11;       // Подключаем кнопку к выходу 10
 int count         = 0;        // Количество секунд
 int delay_count   = 0;        // Счетчик адержки
 int lightValue    = 0;        // Начальное значение света
-int testValue     = 0;        // Тестовое значение
+int curtainValue  = 0;        // Начальное значение занавески
 int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001};
 
 
@@ -56,7 +55,7 @@ void action(int count) {
     lightValue = !lightValue;
     Serial.println("Invert Ligth Value");
   }else{
-    testValue = !testValue;
+    curtain();
     Serial.println("Invert Zanaveska Value");
   }
 }
@@ -65,19 +64,34 @@ void action(int count) {
 void check() {
   if (lightValue)
   {
-    digitalWrite(LedPin, HIGH);
-    digitalWrite(relay1, LOW);
-  } else {
-    digitalWrite(LedPin, LOW);
     digitalWrite(relay1, HIGH);
-  }
-
-    if (testValue)
-  {
-    digitalWrite(relay2, LOW);
   } else {
-    digitalWrite(relay2, HIGH);
+    digitalWrite(relay1, LOW);
   }
 }
 
 /*------------------------------------ Шторы ---------------------------------------------------------*/
+void curtain() {
+  if (curtainValue)
+  {
+    for(int i=0; i<=512; i++) { unStepMotor(motorPin1, motorPin2, motorPin3, motorPin4, 0); } 
+  } else { for(int i=0; i<=512; i++) { unStepMotor(motorPin4, motorPin3, motorPin2, motorPin1, 0); }}
+  delay(1000);
+  curtainValue = !curtainValue;
+}
+
+
+void unStepMotor(int pin_1, int pin_2, int pin_3, int pin_4, int speedMotor){
+  for(int i = 0; i <= 7; i++) {
+    digitalWrite(pin_1, bitRead(lookup[i], 0));
+    digitalWrite(pin_2, bitRead(lookup[i], 1));
+    digitalWrite(pin_3, bitRead(lookup[i], 2));
+    digitalWrite(pin_4, bitRead(lookup[i], 3));
+    delay(speedMotor + 1);
+  }
+  digitalWrite(motorPin1, LOW);
+  digitalWrite(motorPin2, LOW);
+  digitalWrite(motorPin3, LOW);
+  digitalWrite(motorPin4, LOW);
+
+}
